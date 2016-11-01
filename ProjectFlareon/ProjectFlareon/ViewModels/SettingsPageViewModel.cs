@@ -52,6 +52,16 @@ namespace ProjectFlareon.ViewModels
             }
         }
 
+        public string ServerUri
+        {
+            get { return _settings.FhirServerUri; }
+            set
+            {
+                _settings.FhirServerUri = value;
+                RaisePropertyChanged(() => ServerUri);
+            }
+        }
+
         DelegateCommand _ShowBusyCommand;
         public DelegateCommand ShowBusyCommand
             => _ShowBusyCommand ?? (_ShowBusyCommand = new DelegateCommand(async () =>

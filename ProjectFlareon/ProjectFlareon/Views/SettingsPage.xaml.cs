@@ -1,3 +1,4 @@
+using ProjectFlareon.ViewModels;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -7,6 +8,8 @@ namespace ProjectFlareon.Views
     public sealed partial class SettingsPage : Page
     {
         Template10.Services.SerializationService.ISerializationService _SerializationService;
+
+        private SettingsPageViewModel ViewModel => DataContext as SettingsPageViewModel;
 
         public SettingsPage()
         {

@@ -1,0 +1,45 @@
+﻿<Page
+    x:Class="ProjectFlareon.Views.DiagnosticReportsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProjectFlareon.Views"
+    xmlns:FhirModel="using:Hl7.Fhir.Model"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="using:Template10.Controls"
+      DataContext="{Binding DiagnosticReports, Source={StaticResource ViewModelLocator}}"
+      mc:Ignorable="d">
+
+    <RelativePanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <!--  header  -->
+        <controls:PageHeader x:Name="pageHeader"
+                             Content="My Reports"
+                             Frame="{x:Bind Frame}"
+                             EllipsisVisibility="Collapsed"
+                             RelativePanel.AlignLeftWithPanel="True"
+                             RelativePanel.AlignRightWithPanel="True"
+                             RelativePanel.AlignTopWithPanel="True" />
+
+        <ListView ItemsSource="{x:Bind ViewModel.DiagnosticReports}"
+                  RelativePanel.Below="pageHeader"
+                  RelativePanel.AlignLeftWithPanel="True"
+                  RelativePanel.AlignRightWithPanel="True"
+                  RelativePanel.AlignBottomWithPanel="True">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="FhirModel:DiagnosticReport">
+                    <Grid Height="40">
+                        <TextBlock Text="{x:Bind Id}" />
+                        <TextBlock Text="TEST"
+                                   HorizontalAlignment="Right" />
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </RelativePanel>
+</Page>

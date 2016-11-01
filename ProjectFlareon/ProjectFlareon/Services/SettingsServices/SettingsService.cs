@@ -54,6 +54,15 @@ namespace ProjectFlareon.Services.SettingsServices
                 BootStrapper.Current.CacheMaxDuration = value;
             }
         }
+
+        public string FhirServerUri
+        {
+            get { return _helper.Read<string>(nameof(FhirServerUri), "http://spark-dstu2.furore.com/fhir"); }
+            set
+            {
+                _helper.Write(nameof(FhirServerUri), value);
+            }
+        }
     }
 }
 
