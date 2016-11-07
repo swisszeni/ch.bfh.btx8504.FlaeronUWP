@@ -1,0 +1,43 @@
+﻿<Page x:Class="ProjectFlareon.Views.DiagnosticReportDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ProjectFlareon.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:controls="using:Template10.Controls"
+      DataContext="{Binding DiagnosticReportDetail, Source={StaticResource ViewModelLocator}}"
+      mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  header  -->
+        <controls:PageHeader x:Name="pageHeader"
+                             Grid.Row="0"
+                             Content="Report Detail"
+                             Frame="{x:Bind Frame}"
+                             EllipsisVisibility="Collapsed" />
+        <ScrollViewer Grid.Row="1">
+            <RelativePanel Margin="16">
+                <TextBlock x:Name="TitleText"
+                           Text="Lab Diagnostic Report" />
+                <TextBlock x:Name="CodeText"
+                           Text="{x:Bind ViewModel.CurrentDiagnosticReport.Code.Text, Mode=OneWay}"
+                           RelativePanel.Below="TitleText" />
+                <TextBlock x:Name="IdText"
+                           Text="{x:Bind ViewModel.CurrentDiagnosticReport.Id, Mode=OneWay}"
+                           RelativePanel.Below="CodeText" />
+            </RelativePanel>
+        </ScrollViewer>
+        
+        <ProgressRing Grid.Row="1"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Height="40"
+                      Width="40"
+                      IsActive="{x:Bind ViewModel.RequestRunning, Mode=OneWay}" />
+    </Grid>
+</Page>

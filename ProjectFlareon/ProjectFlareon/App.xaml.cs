@@ -7,6 +7,7 @@ using Template10.Common;
 using System;
 using System.Linq;
 using Windows.UI.Xaml.Data;
+using GalaSoft.MvvmLight.Threading;
 
 namespace ProjectFlareon
 {
@@ -33,6 +34,8 @@ namespace ProjectFlareon
 
         public override async Task OnInitializeAsync(IActivatedEventArgs args)
         {
+            DispatcherHelper.Initialize();
+
             if (Window.Current.Content as ModalDialog == null)
             {
                 // create a new frame 
@@ -52,7 +55,7 @@ namespace ProjectFlareon
         public override async Task OnStartAsync(StartKind startKind, IActivatedEventArgs args)
         {
             // long-running startup tasks go here
-            await Task.Delay(5000);
+            // await Task.Delay(5000);
 
             NavigationService.Navigate(typeof(Views.MainPage));
             await Task.CompletedTask;

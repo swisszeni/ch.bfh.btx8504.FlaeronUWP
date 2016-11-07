@@ -102,6 +102,8 @@
     <Compile Include="Services\DataServices\FHIRLabDataService.cs" />
     <Compile Include="Services\DataServices\IFHIRLabDataService.cs" />
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
+    <Compile Include="Utils\Converters.cs" />
+    <Compile Include="ViewModels\DiagnosticReportDetailPageViewModel.cs" />
     <Compile Include="ViewModels\DiagnosticReportsViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
@@ -113,6 +115,9 @@
     </Compile>
     <Compile Include="Views\DetailPage.xaml.cs">
       <DependentUpon>DetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DiagnosticReportDetailPage.xaml.cs">
+      <DependentUpon>DiagnosticReportDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DiagnosticReportsPage.xaml.cs">
       <DependentUpon>DiagnosticReportsPage.xaml</DependentUpon>
@@ -192,11 +197,20 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
+    <Page Include="Utils\ConverterResourceDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
     <Page Include="Views\Busy.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\DetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DiagnosticReportDetailPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

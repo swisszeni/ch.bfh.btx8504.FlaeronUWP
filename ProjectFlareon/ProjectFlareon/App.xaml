@@ -9,10 +9,10 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles\Custom.xaml" />
-                <ResourceDictionary>
-                    <vm:ViewModelLocator x:Key="ViewModelLocator" />
-                </ResourceDictionary>
+                <ResourceDictionary Source="Utils\ConverterResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <vm:ViewModelLocator x:Key="ViewModelLocator" />
         </ResourceDictionary>
     </Application.Resources>
 

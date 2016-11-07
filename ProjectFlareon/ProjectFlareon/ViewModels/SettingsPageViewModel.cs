@@ -62,6 +62,16 @@ namespace ProjectFlareon.ViewModels
             }
         }
 
+        public string PatientId
+        {
+            get { return _settings.FhirPatientId; }
+            set
+            {
+                _settings.FhirPatientId = value;
+                RaisePropertyChanged(() => PatientId);
+            }
+        }
+
         DelegateCommand _ShowBusyCommand;
         public DelegateCommand ShowBusyCommand
             => _ShowBusyCommand ?? (_ShowBusyCommand = new DelegateCommand(async () =>

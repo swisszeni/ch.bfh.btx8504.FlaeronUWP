@@ -58,10 +58,13 @@ namespace ProjectFlareon.Services.SettingsServices
         public string FhirServerUri
         {
             get { return _helper.Read<string>(nameof(FhirServerUri), "http://spark-dstu2.furore.com/fhir"); }
-            set
-            {
-                _helper.Write(nameof(FhirServerUri), value);
-            }
+            set { _helper.Write(nameof(FhirServerUri), value); }
+        }
+
+        public string FhirPatientId
+        {
+            get { return _helper.Read<string>(nameof(FhirPatientId), "pat1"); }
+            set { _helper.Write(nameof(FhirPatientId), value); }
         }
     }
 }

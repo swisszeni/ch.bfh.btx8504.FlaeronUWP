@@ -27,6 +27,7 @@ namespace ProjectFlareon.ViewModels
             SimpleIoc.Default.Register<MainPageViewModel>();
             SimpleIoc.Default.Register<DetailPageViewModel>();
             SimpleIoc.Default.Register<DiagnosticReportsViewModel>();
+            SimpleIoc.Default.Register<DiagnosticReportDetailPageViewModel>();
             SimpleIoc.Default.Register<SettingsPageViewModel>();
         }
 
@@ -35,6 +36,14 @@ namespace ProjectFlareon.ViewModels
             get
             {
                 return ServiceLocator.Current.GetInstance<DiagnosticReportsViewModel>();
+            }
+        }
+
+        public DiagnosticReportDetailPageViewModel DiagnosticReportDetail
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DiagnosticReportDetailPageViewModel>();
             }
         }
 

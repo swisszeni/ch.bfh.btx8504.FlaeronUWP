@@ -9,6 +9,7 @@ namespace ProjectFlareon.Services.DataServices
 {
     public interface IFHIRLabDataService
     {
-        Bundle DiagnosticReportsForPatient(string patId, bool summary = true);
+        Task<Bundle> DiagnosticReportsForPatientAsync(string patId, bool summary = true);
+        Task<DiagnosticReport> DiagnosticReportByIdAsync(string reportId);
     }
 }

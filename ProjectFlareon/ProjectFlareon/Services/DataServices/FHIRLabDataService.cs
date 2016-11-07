@@ -22,23 +22,29 @@ namespace ProjectFlareon.Services.DataServices
             //client.Search
         }
 
-        public Bundle DiagnosticReportsForPatient(string patId, bool summary = true)
+        public async Task<Bundle> DiagnosticReportsForPatientAsync(string patId, bool summary = true)
         {
-            var paramList = new List<Tuple<string, string>>();
-            paramList.Add(Tuple.Create("subject", patId));
-
-            if(summary)
+            return await Task.Run(() =>
             {
-                paramList.Add(Tuple.Create("_summary", "true"));
-            }
-            
-            SearchParams sParams = SearchParams.FromUriParamList(paramList);
-            return client.Search<DiagnosticReport>(sParams);
+                var paramList = new List<Tuple<string, string>>();
+                paramList.Add(Tuple.Create("subject", patId));
+
+                if (summary)
+                {
+                    paramList.Add(Tuple.Create("_summary", "true"));
+                }
+
+                SearchParams sParams = SearchParams.FromUriParamList(paramList);
+                return client.Search<DiagnosticReport>(sParams);
+            });
         }
 
-        public DiagnosticReport DiagnosticReportForId(string reportId)
+        public async Task<DiagnosticReport> DiagnosticReportByIdAsync(string reportId)
         {
-            return client.Read<DiagnosticReport>(reportId);
+            return await Task.Run(() =>
+            {
+                return client.Read<DiagnosticReport>($"DiagnosticReport/{reportId}");
+            });
         }
     }
 }
