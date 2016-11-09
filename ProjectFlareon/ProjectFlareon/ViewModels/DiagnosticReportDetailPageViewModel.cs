@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight.Threading;
+﻿using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
 using Hl7.Fhir.Model;
 using Microsoft.Practices.ServiceLocation;
 using ProjectFlareon.Services.DataServices;
@@ -34,6 +35,16 @@ namespace ProjectFlareon.ViewModels
             set { DispatcherHelper.CheckBeginInvokeOnUI(() => Set(ref _currentDiagnosticReport, value)); }
         }
 
+        public string DRId => CurrentDiagnosticReport?.Id;
+        public string DRCodeDisplay => CurrentDiagnosticReport?.Code.Coding.FirstOrDefault()?.Display;
+        public string DRStatus => CurrentDiagnosticReport?.Status.ToString();
+        public string DRPerformerName => CurrentDiagnosticReport?.Performer.Display;
+        public string DRSubjectName => CurrentDiagnosticReport?.Subject.Display;
+        public DateTimeOffset? DRIssueDate => CurrentDiagnosticReport?.Issued;
+        //public DateTimeOffset DREffectiveDate => CurrentDiagnosticReport.Effective;
+        public List<ResourceReference> DRResult => CurrentDiagnosticReport?.Result;
+        public string DRConclusion => CurrentDiagnosticReport?.Conclusion;
+
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {
             DiagnosticReportId = (state.ContainsKey(nameof(DiagnosticReportId))) ? state[nameof(DiagnosticReportId)]?.ToString() : parameter?.ToString();
@@ -50,6 +61,13 @@ namespace ProjectFlareon.ViewModels
             await Task.CompletedTask;
         }
 
+        private RelayCommand _openPerformerDetailCommand;
+        public RelayCommand OpenPerformerDetailCommand => _openPerformerDetailCommand ?? (_openPerformerDetailCommand = new RelayCommand(() =>
+        {
+            var type = CurrentDiagnosticReport.Performer.TypeName;
+            NavigationService.Navigate(typeof(Views.DiagnosticReportDetailPage));
+        }, () => true));
+
         private async void LoadDataFromServer()
         {
             RequestRunning = true;
@@ -59,7 +77,7 @@ namespace ProjectFlareon.ViewModels
 
             var test = CurrentDiagnosticReport.Code.Coding;
             // Update all bindings
-            RaisePropertyChanged();
+            RaisePropertyChanged("");
 
             RequestRunning = false;
         }

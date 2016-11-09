@@ -21,18 +21,81 @@
                              Frame="{x:Bind Frame}"
                              EllipsisVisibility="Collapsed" />
         <ScrollViewer Grid.Row="1">
-            <RelativePanel Margin="16">
+            <!--  content  -->
+            <RelativePanel Margin="16"
+                           Visibility="{x:Bind ViewModel.RequestRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True, Mode=OneWay}">
                 <TextBlock x:Name="TitleText"
-                           Text="Lab Diagnostic Report" />
-                <TextBlock x:Name="CodeText"
-                           Text="{x:Bind ViewModel.CurrentDiagnosticReport.Code.Text, Mode=OneWay}"
-                           RelativePanel.Below="TitleText" />
+                           Margin="0,0,0,24"
+                           Text="Lab Diagnostic Report"
+                           FontSize="24" />
                 <TextBlock x:Name="IdText"
-                           Text="{x:Bind ViewModel.CurrentDiagnosticReport.Id, Mode=OneWay}"
-                           RelativePanel.Below="CodeText" />
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="TitleText">
+                    <Run Text="ID:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.DRId, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="StatusText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="IdText">
+                    <Run Text="Status:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.DRStatus, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="CodeText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="StatusText">
+                    <Run Text="Code:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.DRCodeDisplay, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="IssuedDateText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="CodeText">
+                    <Run Text="Issued:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.DRIssueDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:dd.MM.yyy HH\\\\:mm (ddd)}', Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="PerformerHeaderText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="IssuedDateText"
+                           Text="Performer:"
+                           FontWeight="Bold" />
+                <HyperlinkButton x:Name="PerformerLinkText"
+                                 Margin="8,-6,0,0"
+                                 RelativePanel.RightOf="PerformerHeaderText"
+                                 RelativePanel.AlignTopWith="PerformerHeaderText"
+                                 Content="{x:Bind ViewModel.DRPerformerName, Mode=OneWay, FallbackValue='Performer missing'}"
+                                 Command="{x:Bind ViewModel.OpenPerformerDetailCommand}" />
+                <!--Subject, name not delivered within container, so deactivated-->
+                <!--<TextBlock x:Name="SubjectHeaderText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="PerformerHeaderText"
+                           Text="Subject:"
+                           FontWeight="Bold" />
+                <HyperlinkButton x:Name="SubjectLinkText"
+                                 Margin="8,-6,0,0"
+                                 RelativePanel.RightOf="SubjectHeaderText"
+                                 RelativePanel.AlignTopWith="SubjectHeaderText"
+                                 Content="{x:Bind ViewModel.DRSubjectName, Mode=OneWay, FallbackValue='Subject missing'}" />-->
+                <TextBlock x:Name="ResultsHeaderText"
+                           Margin="0,10,0,0"
+                           RelativePanel.Below="PerformerHeaderText"
+                           Text="Results:"
+                           FontWeight="Bold" />
+                <ListView x:Name="ResultsList"
+                          RelativePanel.Below="ResultsHeaderText" />
+                <TextBlock x:Name="ConclusionHeaderText"
+                           Margin="0,20,0,0"
+                           RelativePanel.Below="ResultsList"
+                           Text="Conclusion:"
+                           FontWeight="Bold" />
+                <TextBlock x:Name="ConclusionText"
+                           RelativePanel.Below="ConclusionHeaderText"
+                           Text="{x:Bind ViewModel.DRConclusion, Mode=OneWay, FallbackValue='Conclusion missing'}" />
             </RelativePanel>
         </ScrollViewer>
-        
+
         <ProgressRing Grid.Row="1"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center"

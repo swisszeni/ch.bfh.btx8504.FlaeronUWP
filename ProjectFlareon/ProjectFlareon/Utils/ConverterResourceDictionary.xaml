@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:utils="using:ProjectFlareon.Utils">
     <utils:ItemClickEventArgsToClickedItemConverter x:Key="ItemClickEventArgsToClickedItemConverter" />
+    <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <utils:StringFormatConverter x:Key="StringFormatConverter" />
 </ResourceDictionary>
 
 

@@ -107,6 +107,9 @@
     <Compile Include="ViewModels\DiagnosticReportsViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
+    <Compile Include="ViewModels\OrganizationDetailPageViewModel.cs" />
+    <Compile Include="ViewModels\PatientDetailPageViewModel.cs" />
+    <Compile Include="ViewModels\PractitionerDetailViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
@@ -124,6 +127,15 @@
     </Compile>
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OrganizationDetailPage.xaml.cs">
+      <DependentUpon>OrganizationDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PatientDetailPage.xaml.cs">
+      <DependentUpon>PatientDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PractitionerDetailPage.xaml.cs">
+      <DependentUpon>PractitionerDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
@@ -221,6 +233,18 @@
     <Page Include="Views\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\OrganizationDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PatientDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PractitionerDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsPage.xaml">
       <SubType>Designer</SubType>
