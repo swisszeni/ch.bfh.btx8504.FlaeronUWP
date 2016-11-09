@@ -28,8 +28,9 @@ namespace ProjectFlareon.ViewModels
             SimpleIoc.Default.Register<DetailPageViewModel>();
             SimpleIoc.Default.Register<DiagnosticReportsViewModel>();
             SimpleIoc.Default.Register<DiagnosticReportDetailPageViewModel>();
+            SimpleIoc.Default.Register<DiagnosticReportHistoryPageViewModel>();
             SimpleIoc.Default.Register<PatientDetailPageViewModel>();
-            SimpleIoc.Default.Register<PractitionerDetailViewModel>();
+            SimpleIoc.Default.Register<PractitionerDetailPageViewModel>();
             SimpleIoc.Default.Register<OrganizationDetailPageViewModel>();
             SimpleIoc.Default.Register<SettingsPageViewModel>();
         }
@@ -50,6 +51,14 @@ namespace ProjectFlareon.ViewModels
             }
         }
 
+        public DiagnosticReportHistoryPageViewModel DiagnosticReportHistory
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DiagnosticReportHistoryPageViewModel>();
+            }
+        }
+
         public PatientDetailPageViewModel PatientDetail
         {
             get
@@ -58,11 +67,11 @@ namespace ProjectFlareon.ViewModels
             }
         }
 
-        public PractitionerDetailViewModel PractitionerDetail
+        public PractitionerDetailPageViewModel PractitionerDetail
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<PractitionerDetailViewModel>();
+                return ServiceLocator.Current.GetInstance<PractitionerDetailPageViewModel>();
             }
         }
 

@@ -64,8 +64,16 @@ namespace ProjectFlareon.ViewModels
         private RelayCommand _openPerformerDetailCommand;
         public RelayCommand OpenPerformerDetailCommand => _openPerformerDetailCommand ?? (_openPerformerDetailCommand = new RelayCommand(() =>
         {
+            // Reference: "http://spark.furore.com/fhir/Organization/1832473e-2fe0-452d-abe9-3cdb9879522f"
+            // anhand derer den typ rausfinden
             var type = CurrentDiagnosticReport.Performer.TypeName;
             NavigationService.Navigate(typeof(Views.DiagnosticReportDetailPage));
+        }, () => true));
+
+        private RelayCommand _openReportHistoryCommand;
+        public RelayCommand OpenReportHistoryCommand => _openReportHistoryCommand ?? (_openReportHistoryCommand = new RelayCommand(() =>
+        {
+            NavigationService.Navigate(typeof(Views.DiagnosticReportHistoryPage), DiagnosticReportId);
         }, () => true));
 
         private async void LoadDataFromServer()

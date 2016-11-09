@@ -104,12 +104,13 @@
     <Compile Include="Services\SettingsServices\SettingsService.cs" />
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="ViewModels\DiagnosticReportDetailPageViewModel.cs" />
+    <Compile Include="ViewModels\DiagnosticReportHistoryPageViewModel.cs" />
     <Compile Include="ViewModels\DiagnosticReportsViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\OrganizationDetailPageViewModel.cs" />
     <Compile Include="ViewModels\PatientDetailPageViewModel.cs" />
-    <Compile Include="ViewModels\PractitionerDetailViewModel.cs" />
+    <Compile Include="ViewModels\PractitionerDetailPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
@@ -121,6 +122,9 @@
     </Compile>
     <Compile Include="Views\DiagnosticReportDetailPage.xaml.cs">
       <DependentUpon>DiagnosticReportDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DiagnosticReportHistoryPage.xaml.cs">
+      <DependentUpon>DiagnosticReportHistoryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\DiagnosticReportsPage.xaml.cs">
       <DependentUpon>DiagnosticReportsPage.xaml</DependentUpon>
@@ -223,6 +227,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\DiagnosticReportDetailPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DiagnosticReportHistoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

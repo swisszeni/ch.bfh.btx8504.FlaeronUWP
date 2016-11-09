@@ -18,8 +18,13 @@
         <controls:PageHeader x:Name="pageHeader"
                              Grid.Row="0"
                              Content="Report Detail"
-                             Frame="{x:Bind Frame}"
-                             EllipsisVisibility="Collapsed" />
+                             Frame="{x:Bind Frame}">
+            <!--  secondary commands  -->
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton Command="{x:Bind ViewModel.OpenReportHistoryCommand}"
+                              Label="Report History" />
+            </controls:PageHeader.SecondaryCommands>
+        </controls:PageHeader>
         <ScrollViewer Grid.Row="1">
             <!--  content  -->
             <RelativePanel Margin="16"

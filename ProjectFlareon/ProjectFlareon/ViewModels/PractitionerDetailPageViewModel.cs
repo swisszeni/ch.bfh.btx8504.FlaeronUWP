@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProjectFlareon.ViewModels
 {
-    public class PractitionerDetailViewModel : ViewModelBase
+    public class PractitionerDetailPageViewModel : ViewModelBase
     {
     }
 }

@@ -1,5 +1,4 @@
-﻿using ProjectFlareon.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,16 +13,16 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
+
 namespace ProjectFlareon.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class OrganizationDetailPage : Page
+    public sealed partial class DiagnosticReportHistoryPage : Page
     {
-        private OrganizationDetailPageViewModel ViewModel => DataContext as OrganizationDetailPageViewModel;
-
-        public OrganizationDetailPage()
+        public DiagnosticReportHistoryPage()
         {
             this.InitializeComponent();
         }

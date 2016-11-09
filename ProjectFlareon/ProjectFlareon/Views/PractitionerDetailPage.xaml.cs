@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectFlareon.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,8 +14,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace ProjectFlareon.Views
 {
     /// <summary>
@@ -22,6 +21,8 @@ namespace ProjectFlareon.Views
     /// </summary>
     public sealed partial class PractitionerDetailPage : Page
     {
+        private PractitionerDetailPageViewModel ViewModel => DataContext as PractitionerDetailPageViewModel;
+
         public PractitionerDetailPage()
         {
             this.InitializeComponent();
