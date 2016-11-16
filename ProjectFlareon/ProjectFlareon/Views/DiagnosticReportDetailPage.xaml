@@ -101,11 +101,15 @@
             </RelativePanel>
         </ScrollViewer>
 
-        <ProgressRing Grid.Row="1"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Height="40"
-                      Width="40"
-                      IsActive="{x:Bind ViewModel.RequestRunning, Mode=OneWay}" />
+        <StackPanel Orientation="Vertical"
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{x:Bind ViewModel.RequestRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=False, Mode=OneWay}">
+            <ProgressRing Height="40"
+                          Width="40"
+                          IsActive="{x:Bind ViewModel.RequestRunning, Mode=OneWay}" />
+            <TextBlock Text="Requesting data..." />
+        </StackPanel>
     </Grid>
 </Page>

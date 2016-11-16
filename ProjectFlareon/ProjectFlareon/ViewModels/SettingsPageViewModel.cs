@@ -14,6 +14,7 @@ using Template10.Controls;
 using Template10.Mvvm;
 using Template10.Services.SettingsService;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
@@ -142,7 +143,15 @@ namespace ProjectFlareon.ViewModels
 
             IFHIRLabDataService dataService = ServiceLocator.Current.GetInstance<IFHIRLabDataService>();
 
-            Bundle patients = await dataService.PatientsAsync();
+            Bundle patients = await dataService.PatientsAsync(async (e) =>
+            {
+                var dialog = new MessageDialog("Requested resource is not available on the server.", "Error");
+                var result = await dialog.ShowAsync();
+                if (NavigationService.CanGoBack)
+                {
+                    NavigationService.GoBack();
+                }
+            });
             var resourceList = new List<PatientModel>();
             foreach (var item in patients.Entry)
             {
@@ -174,8 +183,6 @@ namespace ProjectFlareon.ViewModels
                 return $"{v.Major}.{v.Minor}.{v.Build}.{v.Revision}";
             }
         }
-
-        public Uri RateMe => new Uri("http://aka.ms/template10");
     }
 }
 

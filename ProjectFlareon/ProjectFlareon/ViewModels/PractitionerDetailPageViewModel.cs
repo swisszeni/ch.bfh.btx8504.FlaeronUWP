@@ -8,5 +8,11 @@ namespace ProjectFlareon.ViewModels
 {
     public class PractitionerDetailPageViewModel : ViewModelBase
     {
+        private bool _requestRunning;
+        public bool RequestRunning
+        {
+            get { return _requestRunning; }
+            set { Set(ref _requestRunning, value); }
+        }
     }
 }

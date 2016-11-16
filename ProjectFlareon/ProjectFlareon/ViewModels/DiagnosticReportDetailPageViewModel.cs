@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Navigation;
 
 namespace ProjectFlareon.ViewModels
@@ -64,10 +65,16 @@ namespace ProjectFlareon.ViewModels
         private RelayCommand _openPerformerDetailCommand;
         public RelayCommand OpenPerformerDetailCommand => _openPerformerDetailCommand ?? (_openPerformerDetailCommand = new RelayCommand(() =>
         {
-            // Reference: "http://spark.furore.com/fhir/Organization/1832473e-2fe0-452d-abe9-3cdb9879522f"
-            // anhand derer den typ rausfinden
-            var type = CurrentDiagnosticReport.Performer.TypeName;
-            NavigationService.Navigate(typeof(Views.DiagnosticReportDetailPage));
+            var performerReference = CurrentDiagnosticReport.Performer.Reference;
+            // Hacky hack to know where to go next...
+            if (performerReference.Contains("/Organization/"))
+            {
+                NavigationService.Navigate(typeof(Views.OrganizationDetailPage), ExtractIdFromUri(performerReference, "/Organization/"));
+            } else if(performerReference.Contains("/Practitioner/"))
+            {
+                NavigationService.Navigate(typeof(Views.PractitionerDetailPage), ExtractIdFromUri(performerReference, "/Practitioner/"));
+            }
+            
         }, () => true));
 
         private RelayCommand _openReportHistoryCommand;
@@ -81,13 +88,25 @@ namespace ProjectFlareon.ViewModels
             RequestRunning = true;
 
             IFHIRLabDataService dataService = ServiceLocator.Current.GetInstance<IFHIRLabDataService>();
-            CurrentDiagnosticReport = await dataService.DiagnosticReportByIdAsync(DiagnosticReportId);
+            CurrentDiagnosticReport = await dataService.DiagnosticReportByIdAsync(async (e) =>
+            {
+                var dialog = new MessageDialog("Requested resource is not available on the server.", "Error");
+                var result = await dialog.ShowAsync();
+                if (NavigationService.CanGoBack)
+                {
+                    NavigationService.GoBack();
+                }
+            }, DiagnosticReportId);
 
-            var test = CurrentDiagnosticReport.Code.Coding;
             // Update all bindings
             RaisePropertyChanged("");
 
             RequestRunning = false;
+        }
+
+        private string ExtractIdFromUri(string uri, string resourceString)
+        {
+            return uri.Substring(uri.IndexOf(resourceString) + resourceString.Length);
         }
     }
 }

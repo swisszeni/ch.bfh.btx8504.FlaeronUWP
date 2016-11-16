@@ -1,4 +1,5 @@
-﻿using Hl7.Fhir.Model;
+﻿using GalaSoft.MvvmLight.Threading;
+using Hl7.Fhir.Model;
 using Hl7.Fhir.Rest;
 using System;
 using System.Collections.Generic;
@@ -18,44 +19,80 @@ namespace ProjectFlareon.Services.DataServices
             client.PreferredFormat = ResourceFormat.Json;
         }
 
-        public async Task<Bundle> PatientsAsync(Bundle existingBundle = null)
+        public async Task<Bundle> PatientsAsync(Action<Exception> errorAction, Bundle existingBundle = null)
         {
             return await Task.Run(() =>
             {
-                if(existingBundle != null)
+                try
                 {
-                    return client.Continue(existingBundle);
-                } else
+                    if (existingBundle != null)
+                    {
+                        return client.Continue(existingBundle);
+                    }
+                    else
+                    {
+                        return client.Search<Patient>();
+                    }
+                } catch (Exception e)
                 {
-                    return client.Search<Patient>();
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
                 }
             });
         }
 
-        public async Task<Patient> PatientByIdAsync(string patientId)
+        public async Task<Patient> PatientByIdAsync(Action<Exception> errorAction, string patientId)
         {
             return await Task.Run(() =>
             {
-                return client.Read<Patient>($"Patient/{patientId}");
+                try
+                {
+                    return client.Read<Patient>($"Patient/{patientId}");
+                } catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
+                
             });
         }
 
-        public Task<Organization> OrganizationByIdAsync(string organizationId)
+        public async Task<Organization> OrganizationByIdAsync(Action<Exception> errorAction, string organizationId)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    return client.Read<Organization>($"Organization/{organizationId}");
+                } catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
+            });
         }
 
-        public Task<Practitioner> PractitionerByIdAsync(string practitionerId)
+        public async Task<Practitioner> PractitionerByIdAsync(Action<Exception> errorAction, string practitionerId)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    return client.Read<Practitioner>($"Practitioner/{practitionerId}");
+                } catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
+            });
         }
 
-        public async Task<Bundle> DiagnosticReportsForPatientAsync(string patId, SummaryType summary = SummaryType.True)
+        public async Task<Bundle> DiagnosticReportsForPatientAsync(Action<Exception> errorAction, string patId, SummaryType summary = SummaryType.True)
         {
-            return await DiagnosticReportsForPatientAsync(patId, null, null, null, null, summary);
+            return await DiagnosticReportsForPatientAsync(errorAction, patId, null, null, null, null, summary);
         }
 
-        public async Task<Bundle> DiagnosticReportsForPatientAsync(string patId, DateTimeOffset? issueDate = null, DateTimeOffset? effectiveDate = null, DateTimeOffset? lastUpdateDate = null, DiagnosticReport.DiagnosticReportStatus? status = null, SummaryType summary = SummaryType.True)
+        public async Task<Bundle> DiagnosticReportsForPatientAsync(Action<Exception> errorAction, string patId, DateTimeOffset? issueDate = null, DateTimeOffset? effectiveDate = null, DateTimeOffset? lastUpdateDate = null, DiagnosticReport.DiagnosticReportStatus? status = null, SummaryType summary = SummaryType.True)
         {
             SearchParams sParams = new SearchParams();
 
@@ -87,21 +124,13 @@ namespace ProjectFlareon.Services.DataServices
             //paramList.Add(Tuple.Create("_summary", summary.ToString()));
             //issueDate paramList.Add(Tuple.Create("i", issueDate));
 
-
-
-
-            return await DiagnosticReportsForParametersAsync(sParams);
-        }
-
-        private async Task<Bundle> DiagnosticReportsForParametersAsync(SearchParams queryparams)
-        {
             return await Task.Run(() =>
             {
-                return client.Search<DiagnosticReport>(queryparams);
+                return client.Search<DiagnosticReport>(sParams);
             });
         }
 
-        public async Task<Bundle> DiagnosticReportsForPatientAsync(Bundle existingBundle = null)
+        public async Task<Bundle> DiagnosticReportsForPatientAsync(Action<Exception> errorAction, Bundle existingBundle = null)
         {
             return await Task.Run(() =>
             {
@@ -109,7 +138,7 @@ namespace ProjectFlareon.Services.DataServices
             });
         }
 
-        public async Task<DiagnosticReport> DiagnosticReportByIdAsync(string reportId, string versionId = null)
+        public async Task<DiagnosticReport> DiagnosticReportByIdAsync(Action<Exception> errorAction, string reportId, string versionId = null)
         {
             return await Task.Run(() =>
             {
@@ -117,7 +146,7 @@ namespace ProjectFlareon.Services.DataServices
             });
         }
 
-        public async Task<Bundle> DiagnosticReportHistoryByIdAsync(string reportId, SummaryType summary = SummaryType.True)
+        public async Task<Bundle> DiagnosticReportHistoryByIdAsync(Action<Exception> errorAction, string reportId, SummaryType summary = SummaryType.True)
         {
             return await Task.Run(() =>
             {
@@ -125,17 +154,17 @@ namespace ProjectFlareon.Services.DataServices
             });
         }
 
-        public Task<Bundle> ObservationsForPatientAsync(string patId)
+        public Task<Bundle> ObservationsForPatientAsync(Action<Exception> errorAction, string patId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Bundle> ObservationsForPatientAsync(string patId, DateTimeOffset? effectiveDate = default(DateTimeOffset?), DateTimeOffset? lastUpdateDate = default(DateTimeOffset?), string observationCode = null, string observationCategory = null, Observation.ObservationStatus? status = default(Observation.ObservationStatus?))
+        public Task<Bundle> ObservationsForPatientAsync(Action<Exception> errorAction, string patId, DateTimeOffset? effectiveDate = default(DateTimeOffset?), DateTimeOffset? lastUpdateDate = default(DateTimeOffset?), string observationCode = null, string observationCategory = null, Observation.ObservationStatus? status = default(Observation.ObservationStatus?))
         {
             throw new NotImplementedException();
         }
 
-        public Task<Observation> ObservationByIdAsync(string observationId)
+        public Task<Observation> ObservationByIdAsync(Action<Exception> errorAction, string observationId)
         {
             throw new NotImplementedException();
         }

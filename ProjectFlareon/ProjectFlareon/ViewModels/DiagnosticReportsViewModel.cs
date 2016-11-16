@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Navigation;
 
 namespace ProjectFlareon.ViewModels
@@ -53,7 +54,15 @@ namespace ProjectFlareon.ViewModels
 
             IFHIRLabDataService dataService = ServiceLocator.Current.GetInstance<IFHIRLabDataService>();
 
-            Bundle reports = await dataService.DiagnosticReportsForPatientAsync(Services.SettingsServices.SettingsService.Instance.FhirPatientId, Hl7.Fhir.Rest.SummaryType.True);
+            Bundle reports = await dataService.DiagnosticReportsForPatientAsync(async (e) =>
+            {
+                var dialog = new MessageDialog("Requested resource is not available on the server.", "Error");
+                var result = await dialog.ShowAsync();
+                if (NavigationService.CanGoBack)
+                {
+                    NavigationService.GoBack();
+                }
+            }, Services.SettingsServices.SettingsService.Instance.FhirPatientId, Hl7.Fhir.Rest.SummaryType.True);
             var resourceList = new List<DiagnosticReport>();
             foreach (var item in reports.Entry)
             {

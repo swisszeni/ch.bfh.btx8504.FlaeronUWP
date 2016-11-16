@@ -10,6 +10,13 @@ namespace ProjectFlareon.ViewModels
 {
     public class PatientDetailPageViewModel : ViewModelBase
     {
+        private bool _requestRunning;
+        public bool RequestRunning
+        {
+            get { return _requestRunning; }
+            set { Set(ref _requestRunning, value); }
+        }
+
         private Patient _currentPatient;
         public Patient CurrentPatient
         {
