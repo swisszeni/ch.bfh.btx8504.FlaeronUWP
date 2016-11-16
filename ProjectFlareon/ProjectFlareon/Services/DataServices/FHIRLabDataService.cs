@@ -15,23 +15,97 @@ namespace ProjectFlareon.Services.DataServices
         public FHIRLabDataService()
         {
             client = new FhirClient(SettingsServices.SettingsService.Instance.FhirServerUri);
+            client.PreferredFormat = ResourceFormat.Json;
         }
 
-        public void Patients()
+        public async Task<Bundle> PatientsAsync(Bundle existingBundle = null)
         {
-            //client.Search
+            return await Task.Run(() =>
+            {
+                if(existingBundle != null)
+                {
+                    return client.Continue(existingBundle);
+                } else
+                {
+                    return client.Search<Patient>();
+                }
+            });
+        }
+
+        public async Task<Patient> PatientByIdAsync(string patientId)
+        {
+            return await Task.Run(() =>
+            {
+                return client.Read<Patient>($"Patient/{patientId}");
+            });
+        }
+
+        public Task<Organization> OrganizationByIdAsync(string organizationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Practitioner> PractitionerByIdAsync(string practitionerId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Bundle> DiagnosticReportsForPatientAsync(string patId, SummaryType summary = SummaryType.True)
         {
+            return await DiagnosticReportsForPatientAsync(patId, null, null, null, null, summary);
+        }
+
+        public async Task<Bundle> DiagnosticReportsForPatientAsync(string patId, DateTimeOffset? issueDate = null, DateTimeOffset? effectiveDate = null, DateTimeOffset? lastUpdateDate = null, DiagnosticReport.DiagnosticReportStatus? status = null, SummaryType summary = SummaryType.True)
+        {
+            SearchParams sParams = new SearchParams();
+
+            sParams.Add("subject", patId);
+
+            if(issueDate != null)
+            {
+                //sParams.Add
+            }
+
+            if(effectiveDate != null)
+            {
+
+            }
+
+            if(lastUpdateDate != null)
+            {
+
+            }
+
+            if(status != null)
+            {
+                //sParams.
+            }
+
+            sParams.Summary = summary;
+            //var paramList = new List<Tuple<string, string>>();
+            //paramList.Add(Tuple.Create("subject", patId));
+            //paramList.Add(Tuple.Create("_summary", summary.ToString()));
+            //issueDate paramList.Add(Tuple.Create("i", issueDate));
+
+
+
+
+            return await DiagnosticReportsForParametersAsync(sParams);
+        }
+
+        private async Task<Bundle> DiagnosticReportsForParametersAsync(SearchParams queryparams)
+        {
             return await Task.Run(() =>
             {
-                var paramList = new List<Tuple<string, string>>();
-                paramList.Add(Tuple.Create("subject", patId));
-                paramList.Add(Tuple.Create("_summary", summary.ToString()));
+                return client.Search<DiagnosticReport>(queryparams);
+            });
+        }
 
-                SearchParams sParams = SearchParams.FromUriParamList(paramList);
-                return client.Search<DiagnosticReport>(sParams);
+        public async Task<Bundle> DiagnosticReportsForPatientAsync(Bundle existingBundle = null)
+        {
+            return await Task.Run(() =>
+            {
+                return client.Continue(existingBundle);
             });
         }
 
@@ -49,6 +123,21 @@ namespace ProjectFlareon.Services.DataServices
             {
                 return client.History($"DiagnosticReport/{reportId}/_history", null, null, summary);
             });
+        }
+
+        public Task<Bundle> ObservationsForPatientAsync(string patId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Bundle> ObservationsForPatientAsync(string patId, DateTimeOffset? effectiveDate = default(DateTimeOffset?), DateTimeOffset? lastUpdateDate = default(DateTimeOffset?), string observationCode = null, string observationCategory = null, Observation.ObservationStatus? status = default(Observation.ObservationStatus?))
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Observation> ObservationByIdAsync(string observationId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

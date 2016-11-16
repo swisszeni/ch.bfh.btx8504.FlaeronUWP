@@ -53,7 +53,7 @@ namespace ProjectFlareon.ViewModels
 
             IFHIRLabDataService dataService = ServiceLocator.Current.GetInstance<IFHIRLabDataService>();
 
-            Bundle reports = await dataService.DiagnosticReportsForPatientAsync(Services.SettingsServices.SettingsService.Instance.FhirPatientId);
+            Bundle reports = await dataService.DiagnosticReportsForPatientAsync(Services.SettingsServices.SettingsService.Instance.FhirPatientId, Hl7.Fhir.Rest.SummaryType.True);
             var resourceList = new List<DiagnosticReport>();
             foreach (var item in reports.Entry)
             {

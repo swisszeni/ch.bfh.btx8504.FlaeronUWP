@@ -10,16 +10,17 @@ namespace ProjectFlareon.Services.DataServices
 {
     public interface IFHIRLabDataService
     {
-        Task<Bundle> PatientsAsync(string snapshotUrl = null);
+        Task<Bundle> PatientsAsync(Bundle existingBundle = null);
         Task<Patient> PatientByIdAsync(string patientId);
         Task<Organization> OrganizationByIdAsync(string organizationId);
         Task<Practitioner> PractitionerByIdAsync(string practitionerId);
         Task<Bundle> DiagnosticReportsForPatientAsync(string patId, SummaryType summary = SummaryType.True);
-        Task<Bundle> DiagnosticReportsFilteredForPatientAsync(string patId, DateTimeOffset? issueDate = null, DateTimeOffset? effectiveDate = null, DateTimeOffset? lastUpdateDate = null, DiagnosticReport.DiagnosticReportStatus? status = null, SummaryType summary = SummaryType.True);
-        Task<Bundle> DiagnosticReportsBySnapshotUriAsync(string snapshotUri);
+        Task<Bundle> DiagnosticReportsForPatientAsync(string patId, DateTimeOffset? issueDate = null, DateTimeOffset? effectiveDate = null, DateTimeOffset? lastUpdateDate = null, DiagnosticReport.DiagnosticReportStatus? status = null, SummaryType summary = SummaryType.True);
+        Task<Bundle> DiagnosticReportsForPatientAsync(Bundle existingBundle = null);
         Task<DiagnosticReport> DiagnosticReportByIdAsync(string reportId, string versionId = null);
         Task<Bundle> DiagnosticReportHistoryByIdAsync(string reportId, SummaryType summary = SummaryType.True);
         Task<Bundle> ObservationsForPatientAsync(string patId);
+        Task<Bundle> ObservationsForPatientAsync(string patId, DateTimeOffset? effectiveDate = null, DateTimeOffset? lastUpdateDate = null, string observationCode = null, string observationCategory = null, Observation.ObservationStatus? status = null);
         Task<Observation> ObservationByIdAsync(string observationId);
 
         // Observation search parameters

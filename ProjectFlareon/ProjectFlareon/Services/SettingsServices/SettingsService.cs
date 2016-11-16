@@ -63,8 +63,14 @@ namespace ProjectFlareon.Services.SettingsServices
 
         public string FhirPatientId
         {
-            get { return _helper.Read<string>(nameof(FhirPatientId), "pat1"); }
+            get { return _helper.Read<string>(nameof(FhirPatientId), "0"); }
             set { _helper.Write(nameof(FhirPatientId), value); }
+        }
+
+        public string FhirPatientName
+        {
+            get { return _helper.Read<string>(nameof(FhirPatientName), "Undefined"); }
+            set { _helper.Write(nameof(FhirPatientName), value); }
         }
     }
 }

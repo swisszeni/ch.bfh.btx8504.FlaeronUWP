@@ -16,17 +16,18 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <!--  header  -->
         <controls:PageHeader x:Name="pageHeader"
                              Grid.Row="0"
                              Content="My Reports"
                              Frame="{x:Bind Frame}"
                              EllipsisVisibility="Collapsed" />
-        <ListView Grid.Row="1" 
-                  ItemsSource="{x:Bind ViewModel.DiagnosticReports, Mode=OneWay}" 
+        <ListView Grid.Row="1"
+                  ItemsSource="{x:Bind ViewModel.DiagnosticReports, Mode=OneWay}"
                   SelectionMode="None"
-                  IsItemClickEnabled="True">
+                  IsItemClickEnabled="True"
+                  Visibility="{x:Bind ViewModel.RequestRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True, Mode=OneWay}">
             <interactivity:Interaction.Behaviors>
                 <core:EventTriggerBehavior EventName="ItemClick">
                     <core:EventTriggerBehavior.Actions>
@@ -51,11 +52,16 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <ProgressRing Grid.Row="1"
-                      HorizontalAlignment="Center"
-                      VerticalAlignment="Center"
-                      Height="40"
-                      Width="40"
-                      IsActive="{x:Bind ViewModel.RequestRunning, Mode=OneWay}" />
+
+        <StackPanel Orientation="Vertical"
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{x:Bind ViewModel.RequestRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=False, Mode=OneWay}">
+            <ProgressRing Height="40"
+                          Width="40"
+                          IsActive="{x:Bind ViewModel.RequestRunning, Mode=OneWay}" />
+            <TextBlock Text="Requesting data..." />
+        </StackPanel>
     </Grid>
 </Page>
