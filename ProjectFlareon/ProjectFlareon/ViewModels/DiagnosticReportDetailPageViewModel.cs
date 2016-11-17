@@ -37,13 +37,34 @@ namespace ProjectFlareon.ViewModels
         }
 
         public string DRId => CurrentDiagnosticReport?.Id;
+        public string DRVersionId => CurrentDiagnosticReport?.Meta.VersionId;
+        public DateTimeOffset? DRIssueDate => CurrentDiagnosticReport?.Issued;
         public string DRCodeDisplay => CurrentDiagnosticReport?.Code.Coding.FirstOrDefault()?.Display;
         public string DRStatus => CurrentDiagnosticReport?.Status.ToString();
         public string DRPerformerName => CurrentDiagnosticReport?.Performer.Display;
         public string DRSubjectName => CurrentDiagnosticReport?.Subject.Display;
-        public DateTimeOffset? DRIssueDate => CurrentDiagnosticReport?.Issued;
-        //public DateTimeOffset DREffectiveDate => CurrentDiagnosticReport.Effective;
-        public List<ResourceReference> DRResult => CurrentDiagnosticReport?.Result;
+
+        public DateTimeOffset? DREffectiveDate
+        {
+            get
+            {
+                DateTimeOffset? effectiveDate = null;
+                var effective = CurrentDiagnosticReport?.Effective;
+                if(effective?.TypeName == "dateTime")
+                {
+                    var effectiveInstant = (FhirDateTime)effective;
+                    effectiveDate = effectiveInstant.ToDateTimeOffset();
+                }
+                return effectiveDate;
+            }
+        }
+
+        private List<Observation> _drResult;
+        public List<Observation> DRResult
+        {
+            get { return _drResult; }
+            set { Set(ref _drResult, value); }
+        }
         public string DRConclusion => CurrentDiagnosticReport?.Conclusion;
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
@@ -97,6 +118,20 @@ namespace ProjectFlareon.ViewModels
                     NavigationService.GoBack();
                 }
             }, DiagnosticReportId);
+
+            List<Observation> observations = new List<Observation>();
+            foreach (var reference in CurrentDiagnosticReport.Result)
+            {
+                if(reference.IsContainedReference)
+                {
+                    var observation = CurrentDiagnosticReport.Contained.Where((x) => (x.Id == reference.Reference.TrimStart('#'))).FirstOrDefault();
+                    if(observation != null)
+                    {
+                        observations.Add((Observation)observation);
+                    }
+                }
+            }
+            DRResult = observations;
 
             // Update all bindings
             RaisePropertyChanged("");

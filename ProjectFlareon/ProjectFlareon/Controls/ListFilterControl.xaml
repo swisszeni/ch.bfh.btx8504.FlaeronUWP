@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="ProjectFlareon.Controls.ListFilterControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:ProjectFlareon.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             DataContext="{Binding DiagnosticReports, Source={StaticResource ViewModelLocator}}"
+             d:DesignHeight="300"
+             d:DesignWidth="400">
+
+    <Grid MaxHeight="400"
+          MaxWidth="360"
+          Background="{ThemeResource ContentDialogBackgroundThemeBrush}"
+          BorderThickness="1"
+          BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--<Button Grid.Row="0"
+                HorizontalAlignment="Right"
+                Margin="0 15 20 5"
+                Width="80"
+                Content="Search"
+                Command="{x:Bind ViewModel.SearchPatientCommand, Mode=OneWay}" />
+        <TextBlock Text="Name"
+                   Grid.Row="1"
+                   Margin="20 8" />
+        <TextBlock Text="ID"
+                   Grid.Row="1"
+                   HorizontalAlignment="Right"
+                   Margin="20 8" />
+        <Rectangle Grid.Row="1"
+                   Height="1"
+                   VerticalAlignment="Bottom"
+                   Fill="{ThemeResource SystemControlPageBackgroundBaseMediumBrush}" />
+
+        <StackPanel Orientation="Vertical"
+                    Grid.Row="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Visibility="{x:Bind ViewModel.PatientRequestRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=False, Mode=OneWay}">
+            <ProgressRing Height="40"
+                          Width="40"
+                          IsActive="{x:Bind ViewModel.PatientRequestRunning, Mode=OneWay}" />
+            <TextBlock Text="Requesting data..." />
+        </StackPanel>
+        <Button x:Name="CancelButton"
+                Grid.Row="3"
+                HorizontalAlignment="Left"
+                MinWidth="80"
+                Margin="20,12"
+                Content="Cancel"
+                Command="{x:Bind ViewModel.CancelPatientSelectionCommand}" />
+        <Button x:Name="SaveButton"
+                Grid.Row="3"
+                HorizontalAlignment="Right"
+                MinWidth="80"
+                Margin="20,12"
+                Content="Save"
+                Command="{x:Bind ViewModel.SavePatientSelectionCommand}"
+                Background="{ThemeResource SystemControlBackgroundAccentBrush}" />-->
+    </Grid>
+</UserControl>

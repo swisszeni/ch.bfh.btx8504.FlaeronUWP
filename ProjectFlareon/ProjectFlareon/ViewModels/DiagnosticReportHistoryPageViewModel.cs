@@ -29,8 +29,8 @@ namespace ProjectFlareon.ViewModels
             set { Set(ref _diagnosticReportId, value); }
         }
 
-        private List<DiagnosicReportServerRequestModel> _diagnosticReportVersions;
-        public List<DiagnosicReportServerRequestModel> DiagnosticReportVersions
+        private List<DiagnosticReportServerRequestModel> _diagnosticReportVersions;
+        public List<DiagnosticReportServerRequestModel> DiagnosticReportVersions
         {
             get { return _diagnosticReportVersions; }
             set { DispatcherHelper.CheckBeginInvokeOnUI(() => Set(ref _diagnosticReportVersions, value)); }
@@ -80,10 +80,10 @@ namespace ProjectFlareon.ViewModels
                 }
             }, DiagnosticReportId);
 
-            var resourceList = new List<DiagnosicReportServerRequestModel>();
+            var resourceList = new List<DiagnosticReportServerRequestModel>();
             foreach (var item in reports.Entry)
             {
-                resourceList.Add(new DiagnosicReportServerRequestModel(item));
+                resourceList.Add(new DiagnosticReportServerRequestModel(item));
             }
 
             DiagnosticReportVersions = resourceList;

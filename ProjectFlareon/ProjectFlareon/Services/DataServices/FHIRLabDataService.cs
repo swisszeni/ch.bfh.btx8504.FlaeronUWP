@@ -147,7 +147,7 @@ namespace ProjectFlareon.Services.DataServices
             {
                 //sParams.
             }
-
+            sParams.OrderBy("effective");
             sParams.Summary = summary;
             //var paramList = new List<Tuple<string, string>>();
             //paramList.Add(Tuple.Create("subject", patId));
@@ -156,7 +156,15 @@ namespace ProjectFlareon.Services.DataServices
 
             return await Task.Run(() =>
             {
-                return client.Search<DiagnosticReport>(sParams);
+                try
+                {
+                    return client.Search<DiagnosticReport>(sParams);
+                }
+                catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
             });
         }
 
@@ -164,7 +172,15 @@ namespace ProjectFlareon.Services.DataServices
         {
             return await Task.Run(() =>
             {
-                return client.Continue(existingBundle);
+                try
+                {
+                    return client.Continue(existingBundle);
+                }
+                catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
             });
         }
 
@@ -172,7 +188,15 @@ namespace ProjectFlareon.Services.DataServices
         {
             return await Task.Run(() =>
             {
-                return client.Read<DiagnosticReport>(versionId == null ? $"DiagnosticReport/{reportId}" : $"DiagnosticReport/{reportId}/_history/{versionId}");
+                try
+                {
+                    return client.Read<DiagnosticReport>(versionId == null ? $"DiagnosticReport/{reportId}" : $"DiagnosticReport/{reportId}/_history/{versionId}");
+                }
+                catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
             });
         }
 
@@ -180,21 +204,74 @@ namespace ProjectFlareon.Services.DataServices
         {
             return await Task.Run(() =>
             {
-                return client.History($"DiagnosticReport/{reportId}", null, null, summary);
+                try
+                {
+                    return client.History($"DiagnosticReport/{reportId}", null, null, summary);
+                }
+                catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
             });
         }
 
-        public Task<Bundle> ObservationsForPatientAsync(Action<Exception> errorAction, string patId)
+        public async Task<Bundle> ObservationsForPatientAsync(Action<Exception> errorAction, string patId)
         {
-            throw new NotImplementedException();
+            return await ObservationsForPatientAsync(errorAction, patId, null, null, null, null, null);
         }
 
-        public Task<Bundle> ObservationsForPatientAsync(Action<Exception> errorAction, string patId, DateTimeOffset? effectiveDate = default(DateTimeOffset?), DateTimeOffset? lastUpdateDate = default(DateTimeOffset?), string observationCode = null, string observationCategory = null, Observation.ObservationStatus? status = default(Observation.ObservationStatus?))
+        public async Task<Bundle> ObservationsForPatientAsync(Action<Exception> errorAction, string patId, DateTimeOffset? effectiveDate = default(DateTimeOffset?), DateTimeOffset? lastUpdateDate = default(DateTimeOffset?), string observationCode = null, string observationCategory = null, Observation.ObservationStatus? status = default(Observation.ObservationStatus?))
         {
-            throw new NotImplementedException();
+            SearchParams sParams = new SearchParams();
+
+            sParams.Add("subject", patId);
+
+            if (effectiveDate != null)
+            {
+
+            }
+
+            if (lastUpdateDate != null)
+            {
+
+            }
+
+            if (observationCode != null)
+            {
+                sParams.Add("code", observationCode);
+            }
+
+            if (observationCategory != null)
+            {
+                
+            }
+
+            if (status != null)
+            {
+                sParams.Add("status", status.ToString());
+            }
+            
+            //var paramList = new List<Tuple<string, string>>();
+            //paramList.Add(Tuple.Create("subject", patId));
+            //paramList.Add(Tuple.Create("_summary", summary.ToString()));
+            //issueDate paramList.Add(Tuple.Create("i", issueDate));
+
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    return client.Search<DiagnosticReport>(sParams);
+                }
+                catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
+            });
         }
 
-        public Task<Observation> ObservationByIdAsync(Action<Exception> errorAction, string observationId)
+        public async Task<Observation> ObservationByIdAsync(Action<Exception> errorAction, string observationId)
         {
             throw new NotImplementedException();
         }

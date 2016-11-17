@@ -2,6 +2,9 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:ProjectFlareon.Views"
+      xmlns:FhirModel="using:Hl7.Fhir.Model"
+      xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:controls="using:Template10.Controls"
@@ -22,7 +25,7 @@
             <!--  secondary commands  -->
             <controls:PageHeader.SecondaryCommands>
                 <AppBarButton Command="{x:Bind ViewModel.OpenReportHistoryCommand}"
-                              Label="Report History" />
+                              Label="Pervious actions on entry" />
             </controls:PageHeader.SecondaryCommands>
         </controls:PageHeader>
         <ScrollViewer Grid.Row="1">
@@ -40,9 +43,23 @@
                          FontWeight="Bold" />
                     <Run Text="{x:Bind ViewModel.DRId, Mode=OneWay}" />
                 </TextBlock>
-                <TextBlock x:Name="StatusText"
+                <TextBlock x:Name="VersionIdText"
                            Margin="0,0,0,8"
                            RelativePanel.Below="IdText">
+                    <Run Text="Version ID:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.DRVersionId, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:dd.MM.yyy HH\\\\:mm (ddd)}', Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="IssuedDateText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="VersionIdText">
+                    <Run Text="Issued:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.DRIssueDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:dd.MM.yyy HH\\\\:mm (ddd)}', Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="StatusText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="IssuedDateText">
                     <Run Text="Status:"
                          FontWeight="Bold" />
                     <Run Text="{x:Bind ViewModel.DRStatus, Mode=OneWay}" />
@@ -54,16 +71,16 @@
                          FontWeight="Bold" />
                     <Run Text="{x:Bind ViewModel.DRCodeDisplay, Mode=OneWay}" />
                 </TextBlock>
-                <TextBlock x:Name="IssuedDateText"
+                <TextBlock x:Name="EffectiveDateText"
                            Margin="0,0,0,8"
                            RelativePanel.Below="CodeText">
-                    <Run Text="Issued:"
+                    <Run Text="Effective Date:"
                          FontWeight="Bold" />
-                    <Run Text="{x:Bind ViewModel.DRIssueDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:dd.MM.yyy HH\\\\:mm (ddd)}', Mode=OneWay}" />
+                    <Run Text="{x:Bind ViewModel.DREffectiveDate, Converter={StaticResource StringFormatConverter}, ConverterParameter='{}{0:dd.MM.yyy HH\\\\:mm (ddd)}', Mode=OneWay}" />
                 </TextBlock>
                 <TextBlock x:Name="PerformerHeaderText"
                            Margin="0,0,0,8"
-                           RelativePanel.Below="IssuedDateText"
+                           RelativePanel.Below="EffectiveDateText"
                            Text="Performer:"
                            FontWeight="Bold" />
                 <HyperlinkButton x:Name="PerformerLinkText"
@@ -89,7 +106,49 @@
                            Text="Results:"
                            FontWeight="Bold" />
                 <ListView x:Name="ResultsList"
-                          RelativePanel.Below="ResultsHeaderText" />
+                          RelativePanel.Below="ResultsHeaderText"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"
+                          Margin="0 10"
+                          SelectionMode="None"
+                          IsItemClickEnabled="True"
+                          ScrollViewer.VerticalScrollMode="Disabled"
+                          ItemsSource="{x:Bind ViewModel.DRResult, Mode=OneWay}">
+                    <interactivity:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="ItemClick">
+                            <core:EventTriggerBehavior.Actions>
+                                <core:InvokeCommandAction Command="{Binding OpenDiagnosticReportDetailCommand}"
+                                                          InputConverter="{StaticResource ItemClickEventArgsToClickedItemConverter}" />
+                            </core:EventTriggerBehavior.Actions>
+                        </core:EventTriggerBehavior>
+                    </interactivity:Interaction.Behaviors>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="FhirModel:Observation">
+                            <Grid Height="40">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" MinWidth="80" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind Code.Text}"
+                                           HorizontalAlignment="Left"
+                                           Margin="10 0 0 0" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding Value.Value}"
+                                           Grid.Column="1"
+                                           Margin="0 0 10 0" />
+                                <TextBlock Text="{Binding Value.Unit}"
+                                           Grid.Column="2"
+                                           Margin="0 0 10 0" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
                 <TextBlock x:Name="ConclusionHeaderText"
                            Margin="0,20,0,0"
                            RelativePanel.Below="ResultsList"

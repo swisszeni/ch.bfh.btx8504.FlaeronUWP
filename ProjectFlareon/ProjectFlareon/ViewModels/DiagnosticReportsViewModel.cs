@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Threading;
 using Hl7.Fhir.Model;
 using Microsoft.Practices.ServiceLocation;
+using ProjectFlareon.Models;
 using ProjectFlareon.Services.DataServices;
 using System;
 using System.Collections.Generic;
@@ -22,8 +23,8 @@ namespace ProjectFlareon.ViewModels
             set { Set(ref _requestRunning, value); }
         }
 
-        private List<DiagnosticReport> _diagnosticReports;
-        public List<DiagnosticReport> DiagnosticReports
+        private List<DiagnosticReportModel> _diagnosticReports;
+        public List<DiagnosticReportModel> DiagnosticReports
         {
             get { return _diagnosticReports; }
             set { DispatcherHelper.CheckBeginInvokeOnUI(() => Set(ref _diagnosticReports, value)); }
@@ -35,10 +36,10 @@ namespace ProjectFlareon.ViewModels
             LoadDataFromServer();
         }, () => true));
 
-        private RelayCommand<DiagnosticReport> _openDiagnosticReportDetailCommand;
-        public RelayCommand<DiagnosticReport> OpenDiagnosticReportDetailCommand => _openDiagnosticReportDetailCommand ?? (_openDiagnosticReportDetailCommand = new RelayCommand<DiagnosticReport>((report) =>
+        private RelayCommand<DiagnosticReportModel> _openDiagnosticReportDetailCommand;
+        public RelayCommand<DiagnosticReportModel> OpenDiagnosticReportDetailCommand => _openDiagnosticReportDetailCommand ?? (_openDiagnosticReportDetailCommand = new RelayCommand<DiagnosticReportModel>((report) =>
         {
-            NavigationService.Navigate(typeof(Views.DiagnosticReportDetailPage), report.Id);
+            NavigationService.Navigate(typeof(Views.DiagnosticReportDetailPage), report.DiagnosticReportId);
         }, (x) => true));
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> suspensionState)
@@ -63,10 +64,10 @@ namespace ProjectFlareon.ViewModels
                     NavigationService.GoBack();
                 }
             }, Services.SettingsServices.SettingsService.Instance.FhirPatientId, Hl7.Fhir.Rest.SummaryType.True);
-            var resourceList = new List<DiagnosticReport>();
-            foreach (var item in reports.Entry)
+            var resourceList = new List<DiagnosticReportModel>();
+            foreach (var item in reports?.Entry)
             {
-                resourceList.Add((DiagnosticReport)item.Resource);
+                resourceList.Add(new DiagnosticReportModel((DiagnosticReport)item.Resource));
             }
 
             DiagnosticReports = resourceList;

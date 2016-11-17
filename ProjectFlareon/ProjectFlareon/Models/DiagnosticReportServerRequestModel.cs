@@ -7,7 +7,7 @@ using static Hl7.Fhir.Model.Bundle;
 
 namespace ProjectFlareon.Models
 {
-    public class DiagnosicReportServerRequestModel
+    public class DiagnosticReportServerRequestModel
     {
         public string method;
         public string methodNice;
@@ -15,7 +15,7 @@ namespace ProjectFlareon.Models
         public string versionIssueDate;
         public string versionIssuer;
 
-        public DiagnosicReportServerRequestModel(EntryComponent entry)
+        public DiagnosticReportServerRequestModel(EntryComponent entry)
         {
 
         }

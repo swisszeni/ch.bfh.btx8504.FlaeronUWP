@@ -36,9 +36,9 @@
                 </core:EventTriggerBehavior>
             </interactivity:Interaction.Behaviors>
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:DiagnosicReportServerRequestModel">
+                <DataTemplate x:DataType="models:DiagnosticReportServerRequestModel">
                     <Grid Height="40">
-                        <TextBlock Text="{x:Bind Id}" />
+                        <!--<TextBlock Text="{x:Bind Id}" />-->
                         <TextBlock Text="TEST"
                                    HorizontalAlignment="Right" />
                     </Grid>
