@@ -16,7 +16,13 @@ namespace ProjectFlareon.Services.DataServices
 
         public FHIRLabDataService()
         {
+            RefreshEndpoint();
+        }
+
+        public void RefreshEndpoint()
+        {
             client = new FhirClient(SettingsServices.SettingsService.Instance.FhirServerUri);
+            //client = new FhirClient("http://fhirtest.uhn.ca/baseDstu2");
             client.PreferredFormat = ResourceFormat.Json;
         }
 
@@ -147,7 +153,7 @@ namespace ProjectFlareon.Services.DataServices
             {
                 //sParams.
             }
-            sParams.OrderBy("effective");
+            // sParams.OrderBy("effectiveDateTime");
             sParams.Summary = summary;
             //var paramList = new List<Tuple<string, string>>();
             //paramList.Add(Tuple.Create("subject", patId));
@@ -273,7 +279,18 @@ namespace ProjectFlareon.Services.DataServices
 
         public async Task<Observation> ObservationByIdAsync(Action<Exception> errorAction, string observationId)
         {
-            throw new NotImplementedException();
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    return client.Read<Observation>($"Observation/{observationId}");
+                }
+                catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
+            });
         }
     }
 }

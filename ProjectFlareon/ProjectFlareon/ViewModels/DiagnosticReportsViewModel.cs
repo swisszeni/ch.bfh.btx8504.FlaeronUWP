@@ -64,13 +64,20 @@ namespace ProjectFlareon.ViewModels
                     NavigationService.GoBack();
                 }
             }, Services.SettingsServices.SettingsService.Instance.FhirPatientId, Hl7.Fhir.Rest.SummaryType.True);
+
+            if(reports == null)
+            {
+                RequestRunning = false;
+                return;
+            }
+
             var resourceList = new List<DiagnosticReportModel>();
-            foreach (var item in reports?.Entry)
+            foreach (var item in reports.Entry)
             {
                 resourceList.Add(new DiagnosticReportModel((DiagnosticReport)item.Resource));
             }
 
-            DiagnosticReports = resourceList;
+            DiagnosticReports = new List<DiagnosticReportModel>(resourceList.OrderBy((x) => x.EffectiveDate));
             RequestRunning = false;
         }
     }

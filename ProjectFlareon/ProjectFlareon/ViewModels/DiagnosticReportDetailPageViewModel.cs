@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Threading;
 using Hl7.Fhir.Model;
 using Microsoft.Practices.ServiceLocation;
+using ProjectFlareon.Models;
 using ProjectFlareon.Services.DataServices;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,12 @@ namespace ProjectFlareon.ViewModels
         public DateTimeOffset? DRIssueDate => CurrentDiagnosticReport?.Issued;
         public string DRCodeDisplay => CurrentDiagnosticReport?.Code.Coding.FirstOrDefault()?.Display;
         public string DRStatus => CurrentDiagnosticReport?.Status.ToString();
-        public string DRPerformerName => CurrentDiagnosticReport?.Performer.Display;
+        public string DRPerformerName {
+            get {
+                return CurrentDiagnosticReport?.Performer.Display != null ? CurrentDiagnosticReport.Performer.Display : "Performer missing";
+            }
+            
+        }
         public string DRSubjectName => CurrentDiagnosticReport?.Subject.Display;
 
         public DateTimeOffset? DREffectiveDate
@@ -59,8 +65,8 @@ namespace ProjectFlareon.ViewModels
             }
         }
 
-        private List<Observation> _drResult;
-        public List<Observation> DRResult
+        private List<ObservationModel> _drResult;
+        public List<ObservationModel> DRResult
         {
             get { return _drResult; }
             set { Set(ref _drResult, value); }
@@ -88,12 +94,12 @@ namespace ProjectFlareon.ViewModels
         {
             var performerReference = CurrentDiagnosticReport.Performer.Reference;
             // Hacky hack to know where to go next...
-            if (performerReference.Contains("/Organization/"))
+            if (performerReference.Contains("Organization/"))
             {
-                NavigationService.Navigate(typeof(Views.OrganizationDetailPage), ExtractIdFromUri(performerReference, "/Organization/"));
-            } else if(performerReference.Contains("/Practitioner/"))
+                NavigationService.Navigate(typeof(Views.OrganizationDetailPage), ExtractIdFromUri(performerReference, "Organization/"));
+            } else if(performerReference.Contains("Practitioner/"))
             {
-                NavigationService.Navigate(typeof(Views.PractitionerDetailPage), ExtractIdFromUri(performerReference, "/Practitioner/"));
+                NavigationService.Navigate(typeof(Views.PractitionerDetailPage), ExtractIdFromUri(performerReference, "Practitioner/"));
             }
             
         }, () => true));
@@ -104,12 +110,18 @@ namespace ProjectFlareon.ViewModels
             NavigationService.Navigate(typeof(Views.DiagnosticReportHistoryPage), DiagnosticReportId);
         }, () => true));
 
+        private RelayCommand<Observation> _openObservationDetailCommand;
+        public RelayCommand<Observation> OpenObservationDetailCommand => _openObservationDetailCommand ?? (_openObservationDetailCommand = new RelayCommand<Observation>((obs) =>
+        {
+            // NavigationService.Navigate(typeof(Views.ObservationDetailPage), DiagnosticReportId);
+        }, (x) => true));
+
         private async void LoadDataFromServer()
         {
             RequestRunning = true;
 
             IFHIRLabDataService dataService = ServiceLocator.Current.GetInstance<IFHIRLabDataService>();
-            CurrentDiagnosticReport = await dataService.DiagnosticReportByIdAsync(async (e) =>
+            Action<Exception> errorAction = async (e) =>
             {
                 var dialog = new MessageDialog("Requested resource is not available on the server.", "Error");
                 var result = await dialog.ShowAsync();
@@ -117,9 +129,11 @@ namespace ProjectFlareon.ViewModels
                 {
                     NavigationService.GoBack();
                 }
-            }, DiagnosticReportId);
+            };
 
-            List<Observation> observations = new List<Observation>();
+            CurrentDiagnosticReport = await dataService.DiagnosticReportByIdAsync(errorAction, DiagnosticReportId);
+
+            List<ObservationModel> observations = new List<ObservationModel>();
             foreach (var reference in CurrentDiagnosticReport.Result)
             {
                 if(reference.IsContainedReference)
@@ -127,7 +141,21 @@ namespace ProjectFlareon.ViewModels
                     var observation = CurrentDiagnosticReport.Contained.Where((x) => (x.Id == reference.Reference.TrimStart('#'))).FirstOrDefault();
                     if(observation != null)
                     {
-                        observations.Add((Observation)observation);
+                        observations.Add(new ObservationModel((Observation)observation));
+                    }
+                } else if(reference.Reference != null)
+                {
+                    
+                    // Hacky hack to know where to go next...
+                    if (reference.Reference.Contains("Observation/"))
+                    {
+                        var observationUri = ExtractIdFromUri(reference.Reference, "Observation/");
+                        var observation = await dataService.ObservationByIdAsync(errorAction, observationUri);
+                        if(observation == null)
+                        {
+                            break;
+                        }
+                        observations.Add(new ObservationModel(observation));
                     }
                 }
             }

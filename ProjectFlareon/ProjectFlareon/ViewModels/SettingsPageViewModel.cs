@@ -48,6 +48,11 @@ namespace ProjectFlareon.ViewModels
             set
             {
                 _settings.FhirServerUri = value;
+                if(value != "")
+                {
+                    ServiceLocator.Current.GetInstance<IFHIRLabDataService>().RefreshEndpoint();
+                }
+                
                 RaisePropertyChanged(() => ServerUri);
             }
         }
@@ -142,8 +147,7 @@ namespace ProjectFlareon.ViewModels
         public RelayCommand SavePatientSelectionCommand => _savePatientSelectionCommand ?? (_savePatientSelectionCommand = new RelayCommand(() =>
         {
             // TODO: remove debug line
-            //PatientId = SelectedPatient.Id;
-            PatientId = "pat2";
+            PatientId = SelectedPatient.Id;
             PatientName = SelectedPatient.Name;
             PatientSearchTerm = null;
 
@@ -164,7 +168,7 @@ namespace ProjectFlareon.ViewModels
             {
                 var dialog = new MessageDialog("Requested resource is not available on the server.", "Error");
                 var result = await dialog.ShowAsync();
-                if (NavigationService.CanGoBack)
+                if (NavigationService?.CanGoBack == true)
                 {
                     NavigationService.GoBack();
                 }
@@ -181,6 +185,12 @@ namespace ProjectFlareon.ViewModels
             }
 
             var resourceList = new List<PatientModel>();
+            if(patients == null)
+            {
+                PatientList = null;
+                PatientRequestRunning = false;
+                return;
+            }
             foreach (var item in patients.Entry)
             {
                 

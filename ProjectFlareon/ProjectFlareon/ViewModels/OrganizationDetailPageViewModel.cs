@@ -36,7 +36,7 @@ namespace ProjectFlareon.ViewModels
         }
 
         public string Name => CurrentOrganization?.Name;
-        public string IdentifierDisplay => CurrentOrganization?.Identifier.FirstOrDefault()?.Type.Coding.FirstOrDefault()?.Display;
+        public string IdentifierDisplay => CurrentOrganization?.Identifier.FirstOrDefault()?.Type?.Coding.FirstOrDefault()?.Display;
 
         public override async Task OnNavigatedToAsync(object parameter, NavigationMode mode, IDictionary<string, object> state)
         {

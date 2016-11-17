@@ -11,6 +11,7 @@ namespace ProjectFlareon.Services.DataServices
 {
     public interface IFHIRLabDataService
     {
+        void RefreshEndpoint();
         Task<Bundle> PatientsAsync(Action<Exception> errorAction, Bundle existingBundle = null);
         Task<Bundle> SearchPatientAsync(Action<Exception> errorAction, string[] searchTerms, Bundle existingBundle = null);
         Task<PatientModel> PatientByIdAsync(Action<Exception> errorAction, string patientId);
