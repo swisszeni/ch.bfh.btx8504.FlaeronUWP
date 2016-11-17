@@ -26,6 +26,28 @@
                            Margin="0,0,0,24"
                            FontSize="24">
                     <Run Text="Welcome" />
+                    <Run Text="{x:Bind ViewModel.Name, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="IdentifierDisplayText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="TitleText">
+                    <Run Text="Identifier:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.Identifier, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="NameDisplayText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="IdentifierDisplayText">
+                    <Run Text="Family Name:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.FamilyName, Mode=OneWay}" />
+                </TextBlock>
+                <TextBlock x:Name="GivenNameDisplayText"
+                           Margin="0,0,0,8"
+                           RelativePanel.Below="NameDisplayText">
+                    <Run Text="Given Name:"
+                         FontWeight="Bold" />
+                    <Run Text="{x:Bind ViewModel.GivenName, Mode=OneWay}" />
                 </TextBlock>
             </RelativePanel>
         </ScrollViewer>

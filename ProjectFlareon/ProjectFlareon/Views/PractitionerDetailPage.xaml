@@ -13,7 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <!--  header  -->
         <controls:PageHeader x:Name="pageHeader"
                              Grid.Row="0"
@@ -24,9 +24,12 @@
                            Visibility="{x:Bind ViewModel.RequestRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True, Mode=OneWay}">
                 <TextBlock x:Name="TitleText"
                            Margin="0,0,0,24"
-                           FontSize="24">
-                    <Run Text="Welcome" />
-                </TextBlock>
+                           FontSize="24"
+                           Text="{x:Bind ViewModel.Name, Mode=OneWay}" />
+                <Image Source="ms-appx:///Assets/missingdatameme.jpg"
+                       MaxWidth="300"
+                       MaxHeight="418"
+                       RelativePanel.Below="TitleText" />
             </RelativePanel>
         </ScrollViewer>
 

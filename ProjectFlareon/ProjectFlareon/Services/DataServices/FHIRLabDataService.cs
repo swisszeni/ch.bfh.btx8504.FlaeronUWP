@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Threading;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Rest;
+using ProjectFlareon.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,13 +42,42 @@ namespace ProjectFlareon.Services.DataServices
             });
         }
 
-        public async Task<Patient> PatientByIdAsync(Action<Exception> errorAction, string patientId)
+        public async Task<Bundle> SearchPatientAsync(Action<Exception> errorAction, string[] searchTerms, Bundle existingBundle = null)
         {
             return await Task.Run(() =>
             {
                 try
                 {
-                    return client.Read<Patient>($"Patient/{patientId}");
+                    if (existingBundle != null)
+                    {
+                        return client.Continue(existingBundle);
+                    }
+                    else
+                    {
+                        SearchParams sParams = new SearchParams();
+                        foreach (string term in searchTerms)
+                        {
+                            sParams.Add("name", term);
+                        }
+
+                        return client.Search<Patient>(sParams);
+                    }
+                }
+                catch (Exception e)
+                {
+                    DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
+                    return null;
+                }
+            });
+        }
+
+        public async Task<PatientModel> PatientByIdAsync(Action<Exception> errorAction, string patientId)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    return new PatientModel(client.Read<Patient>($"Patient/{patientId}"));
                 } catch (Exception e)
                 {
                     DispatcherHelper.CheckBeginInvokeOnUI(() => errorAction(e));
@@ -150,7 +180,7 @@ namespace ProjectFlareon.Services.DataServices
         {
             return await Task.Run(() =>
             {
-                return client.History($"DiagnosticReport/{reportId}/_history", null, null, summary);
+                return client.History($"DiagnosticReport/{reportId}", null, null, summary);
             });
         }
 

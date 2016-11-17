@@ -15,14 +15,14 @@
 
         <Controls:HamburgerMenu.PrimaryButtons>
             <!--  mainpage button  -->
-            <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:MainPage" 
-                                          AutomationProperties.Name="Main"
+            <Controls:HamburgerButtonInfo ClearHistory="True" PageType="views:PatientDetailPage" 
+                                          AutomationProperties.Name="My Data"
                                           >
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Width="48" Height="48"
                                 Symbol="Home" />
                     <TextBlock Margin="12,0,0,0" VerticalAlignment="Center"
-                               Text="Home" />
+                               Text="My Data" />
                 </StackPanel>
             </Controls:HamburgerButtonInfo>
             <Controls:HamburgerButtonInfo ClearHistory="True"

@@ -1,5 +1,6 @@
 ﻿using Hl7.Fhir.Model;
 using Hl7.Fhir.Rest;
+using ProjectFlareon.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace ProjectFlareon.Services.DataServices
     public interface IFHIRLabDataService
     {
         Task<Bundle> PatientsAsync(Action<Exception> errorAction, Bundle existingBundle = null);
-        Task<Patient> PatientByIdAsync(Action<Exception> errorAction, string patientId);
+        Task<Bundle> SearchPatientAsync(Action<Exception> errorAction, string[] searchTerms, Bundle existingBundle = null);
+        Task<PatientModel> PatientByIdAsync(Action<Exception> errorAction, string patientId);
         Task<Organization> OrganizationByIdAsync(Action<Exception> errorAction, string organizationId);
         Task<Practitioner> PractitionerByIdAsync(Action<Exception> errorAction, string practitionerId);
         Task<Bundle> DiagnosticReportsForPatientAsync(Action<Exception> errorAction, string patId, SummaryType summary = SummaryType.True);

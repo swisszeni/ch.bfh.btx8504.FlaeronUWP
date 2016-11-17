@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:ProjectFlareon.Controls"
              xmlns:models="using:ProjectFlareon.Models"
+             xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+             xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              DataContext="{Binding Settings.SettingsPartViewModel, Source={StaticResource ViewModelLocator}}"
@@ -17,16 +19,40 @@
           BorderBrush="{ThemeResource ContentDialogBorderThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Text="Name" Margin="16 8" />
-        <TextBlock Text="ID" HorizontalAlignment="Right" Margin="16 8" />
-        <Rectangle Grid.Row="0"
+        <SearchBox Grid.Row="0"
+                   Margin="20 15 120 5"
+                   PlaceholderText="Patient Name"
+                   QueryText="{x:Bind ViewModel.PatientSearchTerm, Mode=TwoWay}">
+            <interactivity:Interaction.Behaviors>
+                <core:EventTriggerBehavior EventName="QuerySubmitted">
+                    <core:EventTriggerBehavior.Actions>
+                        <core:InvokeCommandAction Command="{Binding SearchPatientCommand}" />
+                    </core:EventTriggerBehavior.Actions>
+                </core:EventTriggerBehavior>
+            </interactivity:Interaction.Behaviors>
+        </SearchBox>
+        <Button Grid.Row="0"
+                HorizontalAlignment="Right"
+                Margin="0 15 20 5"
+                Width="80"
+                Content="Search"
+                Command="{x:Bind ViewModel.SearchPatientCommand, Mode=OneWay}"/>
+        <TextBlock Text="Name"
+                   Grid.Row="1"
+                   Margin="20 8" />
+        <TextBlock Text="ID"
+                   Grid.Row="1"
+                   HorizontalAlignment="Right"
+                   Margin="20 8" />
+        <Rectangle Grid.Row="1"
                    Height="1"
                    VerticalAlignment="Bottom"
                    Fill="{ThemeResource SystemControlPageBackgroundBaseMediumBrush}" />
-        <ListView Grid.Row="1"
+        <ListView Grid.Row="2"
                   HorizontalAlignment="Stretch"
                   Visibility="{x:Bind ViewModel.PatientRequestRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=True, Mode=OneWay}"
                   ItemsSource="{x:Bind ViewModel.PatientList, Mode=OneWay}"
@@ -35,9 +61,9 @@
                 <DataTemplate x:DataType="models:PatientModel">
                     <Grid Height="40">
                         <TextBlock Text="{x:Bind Name}"
-                                   HorizontalAlignment="Left" />
+                                   HorizontalAlignment="Left" Margin="10 0 0 0"/>
                         <TextBlock Text="{x:Bind Id}"
-                                   HorizontalAlignment="Right" />
+                                   HorizontalAlignment="Right" Margin="0 0 10 0" />
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -49,7 +75,7 @@
             </ListView.ItemContainerStyle>
         </ListView>
         <StackPanel Orientation="Vertical"
-                    Grid.Row="1"
+                    Grid.Row="2"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Visibility="{x:Bind ViewModel.PatientRequestRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=False, Mode=OneWay}">
@@ -59,14 +85,14 @@
             <TextBlock Text="Requesting data..." />
         </StackPanel>
         <Button x:Name="CancelButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 HorizontalAlignment="Left"
                 MinWidth="80"
                 Margin="20,12"
                 Content="Cancel"
                 Command="{x:Bind ViewModel.CancelPatientSelectionCommand}" />
         <Button x:Name="SaveButton"
-                Grid.Row="2"
+                Grid.Row="3"
                 HorizontalAlignment="Right"
                 MinWidth="80"
                 Margin="20,12"

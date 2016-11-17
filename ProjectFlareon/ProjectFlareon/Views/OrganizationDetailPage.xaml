@@ -26,13 +26,18 @@
                            Margin="0,0,0,24"
                            FontSize="24"
                            Text="{x:Bind ViewModel.Name, Mode=OneWay}" />
-                <TextBlock x:Name="IdentifyerDisplayText"
+                <TextBlock x:Name="IdentifierDisplayText"
                            Margin="0,0,0,8"
                            RelativePanel.Below="TitleText">
-                    <Run Text="Identifyer:"
+                    <Run Text="Identifier:"
                          FontWeight="Bold" />
-                    <Run Text="{x:Bind ViewModel.IdentifyerDisplay, Mode=OneWay}" />
+                    <Run Text="{x:Bind ViewModel.IdentifierDisplay, Mode=OneWay}" />
                 </TextBlock>
+
+                <Image Source="ms-appx:///Assets/missingdatameme.jpg"
+                       MaxWidth="300"
+                       MaxHeight="418"
+                       RelativePanel.Below="IdentifierDisplayText" />
             </RelativePanel>
         </ScrollViewer>
 

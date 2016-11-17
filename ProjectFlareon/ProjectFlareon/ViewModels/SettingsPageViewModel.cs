@@ -79,6 +79,16 @@ namespace ProjectFlareon.ViewModels
             set { Set(ref _patientRequestRunning, value); }
         }
 
+        private string _patientSearchTerm;
+        public string PatientSearchTerm
+        {
+            get { return _patientSearchTerm; }
+            set {
+                Set(ref _patientSearchTerm, value);
+                SearchPatientCommand.RaiseCanExecuteChanged();
+            }
+        }
+
         private List<PatientModel> _patientList;
         public List<PatientModel> PatientList
         {
@@ -110,9 +120,16 @@ namespace ProjectFlareon.ViewModels
             });
         }, () => true));
 
+        private RelayCommand _searchPatientCommand;
+        public RelayCommand SearchPatientCommand => _searchPatientCommand ?? (_searchPatientCommand = new RelayCommand(() =>
+        {
+            LoadPatientsFromServer(PatientSearchTerm);
+        }, () => PatientSearchTerm?.Length > 0));
+
         private RelayCommand _cancelPatientSelectionCommand;
         public RelayCommand CancelPatientSelectionCommand => _cancelPatientSelectionCommand ?? (_cancelPatientSelectionCommand = new RelayCommand(() =>
         {
+            PatientSearchTerm = null;
             WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
                 var modal = Window.Current.Content as ModalDialog;
@@ -125,9 +142,10 @@ namespace ProjectFlareon.ViewModels
         public RelayCommand SavePatientSelectionCommand => _savePatientSelectionCommand ?? (_savePatientSelectionCommand = new RelayCommand(() =>
         {
             // TODO: remove debug line
-            // PatientId = SelectedPatient.Id;
+            //PatientId = SelectedPatient.Id;
             PatientId = "pat2";
             PatientName = SelectedPatient.Name;
+            PatientSearchTerm = null;
 
             WindowWrapper.Current().Dispatcher.Dispatch(() =>
             {
@@ -137,13 +155,12 @@ namespace ProjectFlareon.ViewModels
             });
         }, () => SelectedPatient != null));
 
-        private async void LoadPatientsFromServer()
+        private async void LoadPatientsFromServer(string searchTerms = null)
         {
             PatientRequestRunning = true;
 
             IFHIRLabDataService dataService = ServiceLocator.Current.GetInstance<IFHIRLabDataService>();
-
-            Bundle patients = await dataService.PatientsAsync(async (e) =>
+            Action<Exception> errorAction = async (e) =>
             {
                 var dialog = new MessageDialog("Requested resource is not available on the server.", "Error");
                 var result = await dialog.ShowAsync();
@@ -151,7 +168,18 @@ namespace ProjectFlareon.ViewModels
                 {
                     NavigationService.GoBack();
                 }
-            });
+            };
+
+            Bundle patients;
+            if (searchTerms == null)
+            {
+                patients = await dataService.PatientsAsync(errorAction);
+            } else
+            {
+                string[] searchParams = searchTerms.Split(' ');
+                patients = await dataService.SearchPatientAsync(errorAction, searchParams);
+            }
+
             var resourceList = new List<PatientModel>();
             foreach (var item in patients.Entry)
             {

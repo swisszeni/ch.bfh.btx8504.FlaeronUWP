@@ -57,7 +57,7 @@ namespace ProjectFlareon
             // long-running startup tasks go here
             // await Task.Delay(5000);
 
-            NavigationService.Navigate(typeof(Views.MainPage));
+            NavigationService.Navigate(typeof(Views.PatientDetailPage));
             await Task.CompletedTask;
         }
     }
